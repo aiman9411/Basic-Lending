@@ -5,7 +5,7 @@ import {Fly} from "./FLY.sol";
 
 /**
 @title Basic Lending Contract
-@notice This is a smart contract - a program that can be deployed into Ethereum
+@notice This is a smart contract - a program that can be deployed into Ethereum blockchain
 @author Aiman Nazmi
 */
 
@@ -15,7 +15,6 @@ contract BasicLending {
         uint256 loanFlyAmount;
         uint256 feeFlyAmount;
         uint256 ethCollateralAmount;
-        uint256 repayTimestamp;
     }
 
     Terms public terms;
@@ -35,12 +34,16 @@ contract BasicLending {
     // @notice Address of Fly
     address public flyAddress;
 
+    // @notice Time to repay
+    uint256 public repayTimestamp;
+
     // @notice Constructor to set loan terms, Fly address
-    constructor(Terms memory _terms, address _flyAddress) {
+    constructor(Terms memory _terms, address _flyAddress, uint _time) {
         terms = _terms;
         flyAddress = _flyAddress;
         lender = msg.sender;
         state = LoanState.Created;
+        repayTimestamp = block.timestamp + _time;
     }
 
     // @notice Modifier to ensure loan state is as per expected
@@ -73,7 +76,7 @@ contract BasicLending {
     // @notice Function for lender to liquidate collateral
     function liquidate() public onlyInState(LoanState.Taken) {
         require(msg.sender == lender, "Only lender can liquidate the loan");
-        require(block.timestamp >= terms.repayTimestamp, "Cannot liquidate before the loan is due");
+        require(block.timestamp >= repayTimestamp, "Cannot liquidate before the loan is due");
         selfdestruct(payable(lender));
     }
 
