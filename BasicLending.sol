@@ -81,7 +81,7 @@ contract BasicLending {
     }
 
     // @notice Function to view collateral balance
-    function viewCollBalance() view public returns (uint) {
+    function viewCollBalance() view public returns (uint256) {
         return address(this).balance;
     }
 
