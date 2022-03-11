@@ -38,7 +38,7 @@ contract BasicLending {
     uint256 public repayTimestamp;
 
     // @notice Constructor to set loan terms, Fly address, loan tenure
-    constructor(Terms memory _terms, address _flyAddress, uint _time) {
+    constructor(Terms memory _terms, address _flyAddress, uint256 _time) {
         terms = _terms;
         flyAddress = _flyAddress;
         lender = msg.sender;
