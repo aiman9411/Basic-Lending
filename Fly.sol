@@ -93,16 +93,18 @@ contract Fly is IERC20 {
         return true;
     }
 
-    // @notice Function to allow spender to transfer on behalf of owner
+    // @notice Function to transfer token which may include transfer from spender
     // @param from Address of owner
     // @param to Address of recipient
-    // @param amount Token amount to be transferred
-    function transferFrom(
-        address from,
-        address to,
-        uint256 amount
-    ) public override returns (bool) {
-        require(balance[from] >= amount, "Insufficient amount");
+    // @param amount Amount of token to transfer
+    function transferFrom(address from, address to, uint256 amount) public override returns (bool) {
+        require(balance[from] >= amount, "Insufficient balance");
+        if(from != msg.sender && totalAllowance[from][msg.sender] >= amount) {
+            totalAllowance[from][msg.sender] -= amount;
+            balance[to] += amount;
+            emit Transfer(from, to, amount);
+            return true;
+        }
         balance[from] -= amount;
         balance[to] += amount;
         emit Transfer(from, to, amount);
