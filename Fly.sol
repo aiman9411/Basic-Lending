@@ -109,21 +109,21 @@ contract Fly is IERC20 {
         return true;
     }
 
-    // @notice Function to mint token
-    // @param amount Amount of token to mint
-    function mint(uint amount) external {
-        require(msg.sender == contractOwner, "No authorithy to mint");
-        balance[msg.sender] += amount;
-        totalTokenSupply += amount;
-        emit Transfer(address(0), msg.sender, amount);
+    // @notice Function to mint new token
+    // @param _amount Amount of token to mint
+    function mint(uint256 _amount) public returns (bool) {
+        require(msg.sender == contractOwner, "Not contract owner");
+        totalTokenSupply += _amount;
+        balance[msg.sender] += _amount;
+        return true;
     }
 
     // @notice Function to burn token
-    // @param amount Amount of token to burn
-    function burn(uint amount) external {
-        require(msg.sender == contractOwner, "No authorithy to burn");
-        balance[msg.sender] -= amount;
-        totalTokenSupply -= amount;
-        emit Transfer(msg.sender, address(0), amount);
+    // @param _amount Amount of token to burn
+    function burn(uint256 _amount) public returns (bool) {
+        require(msg.sender == contractOwner, "Not contract owner");
+        totalTokenSupply -= _amount;
+        balance[msg.sender] -= _amount;
+        return true;
     }
 }
